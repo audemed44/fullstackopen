@@ -1,0 +1,25 @@
+title 0.6 new note (SPA)
+
+note over browser:
+user enters some text in the note 
+form and presses the submit button
+end note 
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over server:
+server gets the form data from the POST 
+request which is executed via code in 
+spa.js and not the action attribute
+and pushes it in the json file after 
+appending the timestamp
+end note
+
+server-->browser: HTTP Status Code 201
+
+note over browser:
+browser starts executing js-code
+which redraws the list 
+end note
+
+
