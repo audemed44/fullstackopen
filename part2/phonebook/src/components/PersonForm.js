@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import personService from "../services/person";
 
 const PersonForm = props => {
   const [newPerson, setNewPerson] = useState({
@@ -14,14 +15,41 @@ const PersonForm = props => {
   const addPerson = event => {
     event.preventDefault();
     const PersonObject = {
+      id: props.persons.length + 1,
       name: newPerson.name,
       number: newPerson.number
     };
+    console.log(PersonObject.id);
     if (props.persons.map(elem => elem.name).includes(newPerson.name)) {
-      window.alert(`${newPerson.name} is already added to the phonebook!`);
+      if (
+        window.confirm(
+          `${newPerson.name} is already added to the phonebook, replace the old number with a new one?`
+        )
+      ) {
+        PersonObject.id = props.persons.filter(
+          person => person.name === newPerson.name
+        )[0].id;
+        props.setPersons(
+          props.persons
+            .filter(person => person.name !== newPerson.name)
+            .concat(PersonObject)
+        );
+        props.setShownPersons(
+          props.persons
+            .filter(person => person.name !== newPerson.name)
+            .concat(PersonObject)
+        );
+        personService.update(
+          props.persons.filter(person => person.name === newPerson.name)[0].id,
+          PersonObject
+        );
+      }
     } else {
-      props.setPersons(props.persons.concat(PersonObject));
-      props.setShownPersons(props.persons.concat(PersonObject));
+      personService.create(PersonObject).then(person => {
+        console.log(`added id ${person.id} to server`);
+        props.setPersons(props.persons.concat(PersonObject));
+        props.setShownPersons(props.persons.concat(PersonObject));
+      });
     }
   };
 

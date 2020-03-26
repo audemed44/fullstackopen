@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import SearchPerson from "./SearchPerson";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
-import axios from "axios";
+import personService from "../services/person";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [shownPersons, setShownPersons] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then(response => {
-      setPersons(response.data);
-      setShownPersons(response.data);
+    personService.getAll().then(allPersons => {
+      setPersons(allPersons);
+      setShownPersons(allPersons);
     });
   }, []);
 
@@ -23,7 +23,12 @@ const App = () => {
         setPersons={setPersons}
         setShownPersons={setShownPersons}
       />
-      <Persons shownPersons={shownPersons} />
+      <Persons
+        shownPersons={shownPersons}
+        setShownPersons={setShownPersons}
+        setPersons={setPersons}
+        persons={persons}
+      />
     </div>
   );
 };
