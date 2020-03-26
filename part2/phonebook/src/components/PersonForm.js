@@ -39,16 +39,38 @@ const PersonForm = props => {
             .filter(person => person.name !== newPerson.name)
             .concat(PersonObject)
         );
-        personService.update(
-          props.persons.filter(person => person.name === newPerson.name)[0].id,
-          PersonObject
-        );
+        personService
+          .update(
+            props.persons.filter(person => person.name === newPerson.name)[0]
+              .id,
+            PersonObject
+          )
+          .then(response => console.log(response))
+          .catch(error => {
+            props.setMessage({
+              type: "error",
+              msg: `Information of ${
+                props.persons.find(person => person.name === newPerson.name)
+                  .name
+              } has already been removed from the server!`
+            });
+            setTimeout(() => {
+              props.setMessage(null);
+            }, 5000);
+          });
       }
     } else {
       personService.create(PersonObject).then(person => {
         console.log(`added id ${person.id} to server`);
         props.setPersons(props.persons.concat(PersonObject));
         props.setShownPersons(props.persons.concat(PersonObject));
+        props.setMessage({
+          type: "success",
+          msg: `Added ${PersonObject.name}`
+        });
+        setTimeout(() => {
+          props.setMessage(null);
+        }, 5000);
       });
     }
   };

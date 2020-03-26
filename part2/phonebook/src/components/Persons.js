@@ -1,7 +1,13 @@
 import React from "react";
 import personService from "../services/person";
 
-const Persons = ({ shownPersons, setShownPersons, setPersons, persons }) => {
+const Persons = ({
+  shownPersons,
+  setShownPersons,
+  setPersons,
+  persons,
+  setMessage
+}) => {
   const handleOnClick = event => {
     const id = event.target.id;
     if (
